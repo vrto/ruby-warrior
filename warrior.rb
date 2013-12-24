@@ -9,6 +9,8 @@ class Player
     space = warrior.feel(@direction)
     if (should_turn_around?(warrior))
       then warrior.pivot!
+    elsif (should_shoot?(warrior))
+      then warrior.shoot!(@direction)
     elsif (should_run_away?(warrior))
       then warrior.walk!(:backward)
     elsif (safe_to_rest?(warrior, space))
@@ -41,6 +43,17 @@ class Player
 
   def should_turn_around?(warrior)
     @last_health == nil && warrior.feel(:forward).wall?
+  end
+
+  def should_shoot?(warrior)
+    spaces = warrior.look
+    should_shoot = false
+    spaces.each { |space| 
+      if (space.enemy?) 
+        then should_shoot = true
+      end   
+    }
+    should_shoot
   end
 
 end
